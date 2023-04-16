@@ -50,6 +50,10 @@ class Playlist:
 				artists[id] = name
 		return artists
 
+	def get_playlist_genres(self) -> list:
+		# TODO implement logic for going through list of artists and getting genres
+		return []
+
 	@staticmethod
 	def check_url(url: str) -> bool:
 		pattern = "https:\/\/open\.spotify\.com\/playlist\/"

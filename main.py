@@ -9,7 +9,13 @@ auth = Auth(settings)
 UI = CommandLineUI()
 playlist = Playlist(auth, UI.url)
 
-for artist in playlist.artists.values():
-    print(artist)
+i:int = 0
+limit:int = 50
+print("Number of artists ", len(playlist.artists))
+for artist_id in playlist.artists.keys():
+    i += 1
+    if(i > limit):
+        break
+    print(artist_id)
 
 # print("playlist ID", playlist.id)
