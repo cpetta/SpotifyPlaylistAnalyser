@@ -16,12 +16,12 @@ class CommandLineUI:
 
 		args = parser.parse_args()
 
-		url = args.url[0]
+		url:str = args.url[0]
 
 		check_url = Playlist.check_url(url)
 
 		if check_url:
-			self.url = url
+			self.url: str = url
 		else:
-			self.url = False
+			self.url: str = ""
 			print("Please ensure that the url provided is a share link for the playlist e.x (open.spotify.com/playlist/)")

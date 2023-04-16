@@ -1,5 +1,6 @@
 
-__pycache__/commandline_ui.cpython-311.pyc
-__pycache__/spotify_playlist.cpython-311.pyc
+__pycache__/*
 .vscode/settings.json
+settings.py
+token.json
 settings.py

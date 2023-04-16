@@ -1,10 +1,15 @@
 from commandline_ui import CommandLineUI
 from spotify_playlist import Playlist
 from spotify_auth import Auth
+from settings import Settings
 
-auth = Auth()
-print(auth)
+settings = Settings()
+
+auth = Auth(settings)
 UI = CommandLineUI()
-playlist = Playlist(UI)
+playlist = Playlist(auth, UI.url)
 
-print(playlist.id)
+for artist in playlist.artists.values():
+    print(artist)
+
+# print("playlist ID", playlist.id)

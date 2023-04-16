@@ -1,47 +1,37 @@
-import requests
-import json
+import time
+
+from spotify_access_token import Token
+from settings import Settings
 
 class Auth:
-	def __init__(self, settings):
-		self.id = settings.id
-		self.secret = settings.secret
-		# self.token = self.get_saved_auth() #self.get_token()
-		self.test_token = {
-			"access_token": "TADA",
-			"token_type": "Bearer",
-			"expires_in": 3600
-		}
+	def __init__(self, settings:Settings):
+		self.id:str = settings.id
+		self.secret:str = settings.secret
+		self.token:Token = self.get_token()
 
-		self.save_auth()
+	def get_token(self) -> Token:
+		token:Token = Token()
+		request_new_token:bool = False
+		loaded_saved_token:bool = token.load_saved()
 
+		if(not loaded_saved_token):
+			print("Unable to loaded Saved Token requesting new one")
+			request_new_token = True
+		else:
+			current_time:float = time.mktime(time.localtime())
 
-	def get_token(self):
-		data = {
-			'grant_type': 'client_credentials',
-			'client_id': self.id,
-			'client_secret': self.secret,
-		}
-		response = requests.post('https://accounts.spotify.com/api/token', data=data)
-		return response
+			if(current_time < token.expire_time):
+				print("Good Token Expires in", token.expire_time - current_time)
+			else:
+				print("Expired token", token.expire_time - current_time)
+				request_new_token = True
 
+		if(request_new_token):
+			request_success:bool = token.request_new(self.id, self.secret)
+			
+			if(request_success):
+				print("requested new token")
+			else:
+				print("error requesting new token")
 
-	def get_saved_auth(self):
-		try: 
-			f = open ("auth.json", "r")
-			data = f.readlines()
-			print(data)
-			f.close()
-		except:
-			self.save_auth()
-			print("Creating auth file to save auth request.")
-
-	def save_auth(self):
-		try:
-			file = open("auth.json", "w+")
-			Auth_json = json.dumps(self.token)
-			file.write(Auth_json)
-			file.close()
-		except:
-			print("Error writing to auth file")
-
-
+		return token
