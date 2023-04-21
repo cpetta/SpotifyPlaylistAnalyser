@@ -35,3 +35,8 @@ class Auth:
 				print("error requesting new token")
 
 		return token
+
+	def http_headers(self) -> dict:
+		return {
+			"Authorization": f"{self.token.token_type} {self.token.access_token}"
+		}
