@@ -2,9 +2,9 @@ import re
 import requests
 import json
 
-from spotify_auth import Auth
+from auth import Auth
 from artist import Artist
-from spotify_access_token import Token
+from access_token import Token
 
 class Playlist:
 	def __init__(self, auth:Auth, url:str):

@@ -1,6 +1,6 @@
 import requests
 
-from spotify_auth import Auth
+from auth import Auth
 
 class Artist:
 	def __init__(self, id:str, name:str):

@@ -1,6 +1,6 @@
 from commandline_ui import CommandLineUI
-from spotify_playlist import Playlist
-from spotify_auth import Auth
+from playlist import Playlist
+from auth import Auth
 from artist import Artist
 from settings import Settings
 
@@ -9,10 +9,16 @@ settings = Settings()
 ARTIST_REC_LIMIT = 10
 GENRE_LIMIT = 5
 
+# Get playlist URL from user
 UI = CommandLineUI()
+
+# Authenticate with Spotify and get a token
 auth = Auth(settings)
+
+# Get playlist information.
 playlist = Playlist(auth, UI.url)
 
+# Create list of recomended artists 
 print("Number of artists ", len(playlist.artists))
 recomended_artists_list:dict[str, Artist] = {};
 for artist in playlist.artists.values():
@@ -24,5 +30,8 @@ for artist in playlist.artists.values():
 
 ranked_recomended_artists = sorted(recomended_artists_list.values())
 
+i:int = 0
 for recomended_artist in ranked_recomended_artists:
+	if i > ARTIST_REC_LIMIT:
+		break
 	print(recomended_artist)

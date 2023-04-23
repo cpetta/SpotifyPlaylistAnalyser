@@ -1,6 +1,6 @@
 import time
 
-from spotify_access_token import Token
+from access_token import Token
 from settings import Settings
 
 class Auth:

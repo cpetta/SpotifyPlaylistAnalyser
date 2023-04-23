@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from spotify_playlist import Playlist
+from playlist import Playlist
 
 class CommandLineUI:
 	def __init__(self):
