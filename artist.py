@@ -7,6 +7,7 @@ class Artist:
 		self.id:str = id
 		self.name:str = name
 		self.count:int = 1
+		self.related_artists:dict[str, 'Artist'] = {}
 
 	def get_related_artists(
 			self,
@@ -27,13 +28,62 @@ class Artist:
 		for item in data:
 			id:str = item['id']
 			name:str = item['name']
+
+			self.related_artists[id] = Artist(id, name)
 			
 			if (id in artists):
 				artists[id].count += 1
 			else:
-				artists[id] = Artist(id, name)
+				artists[id] = self.related_artists[id]
 
 		return artists
 	
+	# ToString
+
 	def __str__(self) -> str:
-		return f" Name: {self.name}\n id: {self.id}\n count:{self.count}"
+		return f"\nName: {self.name}\nCount: {self.count}\n"
+		# return f"\nName: {self.name}\n id: {self.id}\n count:{self.count}\n"
+
+
+	# Compairison opperators
+	# Equal
+	def __eq__(self, other: 'Artist') -> bool:
+		if self.count == other.count:
+			return True
+		else:
+			return False
+	
+	# Greater Than	
+	def __gt__(self, other: 'Artist') -> bool:
+		if self.count < other.count:
+			return True
+		else:
+			return False
+	
+	# Greater or equal
+	def __ge__(self, other: 'Artist') -> bool:
+		if self.count <= other.count:
+			return True
+		else:
+			return False
+	
+	# Less then
+	def __lt__(self, other: 'Artist') -> bool:
+		if self.count > other.count:
+			return True
+		else:
+			return False
+	
+	# Less than or equal
+	def __le__(self, other: 'Artist') -> bool:
+		if self.count >= other.count:
+			return True
+		else:
+			return False
+	
+	# Not equal
+	def __ne__(self, other: 'Artist') -> bool:
+		if self.count != other.count:
+			return True
+		else:
+			return False
