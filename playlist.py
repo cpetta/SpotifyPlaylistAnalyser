@@ -1,10 +1,8 @@
 import re
 import requests
-import json
 
 from auth import Auth
 from artist import Artist
-from access_token import Token
 
 class Playlist:
 	def __init__(self, auth:Auth, url:str):
