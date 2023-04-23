@@ -1,7 +1,10 @@
+import sys
+
 from commandline_ui import CommandLineUI
 from playlist import Playlist
 from auth import Auth
 from artist import Artist
+from album import Album
 from settings import Settings
 
 settings = Settings()
@@ -23,6 +26,11 @@ print("\nPlaylist Genres\n")
 for genre in playlist.genres:
 	print(genre)
 
+# for album in playlist.albums.values():
+# 	for genre in album.genres:
+# 		print(genre)
+
+sys.exit()
 
 # Create list of recomended artists
 print("Number of artists in playlist", len(playlist.artists))

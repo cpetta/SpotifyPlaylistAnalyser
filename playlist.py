@@ -11,9 +11,9 @@ class Playlist:
 		self.url:str = url
 		self.id:str = self.get_id()
 		self.data:dict = spotify_api.get_playlist(auth, self.id)
-		self.albums:dict[str, Album] = self.get_playlist_albums()
+		self.albums:dict[str, Album] = self.get_playlist_albums(auth)
 		self.artists:dict[str, Artist] = self.get_playlist_artists()
-		self.genres:list = self.get_playlist_genres()
+		self.genres:list = self.get_playlist_genres(auth)
 
 	def get_id(self) -> str:
 		if not self.check_url(self.url):
@@ -44,7 +44,7 @@ class Playlist:
 		return artists
 
 
-	def get_playlist_albums(self) -> dict[str, Album]:
+	def get_playlist_albums(self, auth) -> dict[str, Album]:
 		albums:dict[str, Album] = {}
 
 		if(self.id == ""):
@@ -54,27 +54,21 @@ class Playlist:
 
 		for track in tracks:
 			for trackAlbumID in track['track']['album'].values():
-				albums[trackAlbumID] = Album(trackAlbumID)
-				# id:str = trackAlbum.id
-
+				if trackAlbumID not in albums:
+					albums[trackAlbumID] = Album(auth, trackAlbumID)
 		return albums
 
 
-	def get_playlist_genres(self) -> list:
-		
-		tracks = self.data['tracks']['items']
-
-		# Get each Album Genre
-		for track in tracks:
-			break
-
-		
-		self.data['tracks']['items']
-		
-
+	def get_playlist_genres(self, auth) -> list:
 		# get each Artist Genre
+		artist_ids = []
 
-		return []
+		for artist in self.artists.values():
+			artist_ids.append(artist.id)
+
+		genres = spotify_api.get_several_artists_genres(auth, artist_ids)
+
+		return genres
 
 	@staticmethod
 	def check_url(url:str) -> bool:
