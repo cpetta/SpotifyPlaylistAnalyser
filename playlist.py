@@ -1,16 +1,19 @@
 import re
-import requests
+import spotify_api
 
 from auth import Auth
 from artist import Artist
+from album import Album
+
 
 class Playlist:
 	def __init__(self, auth:Auth, url:str):
 		self.url:str = url
 		self.id:str = self.get_id()
-		self.auth:Auth = auth
-		self.response_data:dict = self.get_data()
+		self.data:dict = spotify_api.get_playlist(auth, self.id)
+		self.albums:dict[str, Album] = self.get_playlist_albums()
 		self.artists:dict[str, Artist] = self.get_playlist_artists()
+		self.genres:list = self.get_playlist_genres()
 
 	def get_id(self) -> str:
 		if not self.check_url(self.url):
@@ -23,26 +26,13 @@ class Playlist:
 		return id
 
 
-	def get_data(self) -> dict:
-		API_endpoint = f'https://api.spotify.com/v1/playlists/{self.id}'
-		
-		parameters = {
-			"market": "US",
-			"fields": "tracks.items.track.artists(name, id)"
-		}
-
-		response = requests.get(url=API_endpoint, headers=self.auth.http_headers(), params=parameters) # type: ignore
-
-		return response.json()
-
-
 	def get_playlist_artists(self) -> dict[str, Artist]:
 		artists:dict[str, Artist] = {}
 
-		if(len(self.id) == 0):
+		if(self.id == ""):
 			return artists
 		
-		tracks = self.response_data['tracks']['items']
+		tracks = self.data['tracks']['items']
 
 		for track in tracks:
 			for trackArtist in track['track']['artists']:
@@ -54,8 +44,36 @@ class Playlist:
 		return artists
 
 
+	def get_playlist_albums(self) -> dict[str, Album]:
+		albums:dict[str, Album] = {}
+
+		if(self.id == ""):
+			return albums
+		
+		tracks = self.data['tracks']['items']
+
+		for track in tracks:
+			for trackAlbumID in track['track']['album'].values():
+				albums[trackAlbumID] = Album(trackAlbumID)
+				# id:str = trackAlbum.id
+
+		return albums
+
+
 	def get_playlist_genres(self) -> list:
-		# TODO implement logic for going through list of artists and getting genres
+		
+		tracks = self.data['tracks']['items']
+
+		# Get each Album Genre
+		for track in tracks:
+			break
+
+		
+		self.data['tracks']['items']
+		
+
+		# get each Artist Genre
+
 		return []
 
 	@staticmethod

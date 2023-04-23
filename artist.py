@@ -1,12 +1,13 @@
-import requests
+import spotify_api
 
 from auth import Auth
 
 class Artist:
-	def __init__(self, id:str, name:str):
+	def __init__(self, id:str, name:str) -> None:
 		self.id:str = id
 		self.name:str = name
 		self.count:int = 1
+		self.generes:dict = {}
 		self.related_artists:dict[str, 'Artist'] = {}
 
 	def get_related_artists(
@@ -18,12 +19,8 @@ class Artist:
 
 		if(len(self.id) == 0):
 			return artists
-		
-		API_endpoint = f'https://api.spotify.com/v1/artists/{self.id}/related-artists'
 
-		response = requests.get(url=API_endpoint, headers=auth.http_headers()) # type: ignore
-
-		data = response.json()['artists']
+		data = spotify_api.get_related_artists(auth, self)
 
 		for item in data:
 			id:str = item['id']
@@ -38,11 +35,10 @@ class Artist:
 
 		return artists
 	
-	# ToString
 
+	# ToString
 	def __str__(self) -> str:
 		return f"\nName: {self.name}\nCount: {self.count}\n"
-		# return f"\nName: {self.name}\n id: {self.id}\n count:{self.count}\n"
 
 
 	# Compairison opperators
