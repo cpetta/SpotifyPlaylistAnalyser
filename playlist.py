@@ -9,6 +9,7 @@ class Playlist:
 		self.url:str = url
 		self.id:str = self.get_id()
 		self.auth:Auth = auth
+		self.response_data:dict = self.get_data()
 		self.artists:dict[str, Artist] = self.get_playlist_artists()
 
 	def get_id(self) -> str:
@@ -21,12 +22,8 @@ class Playlist:
 		id:str = id_slug.split("?")[0]
 		return id
 
-	def get_playlist_artists(self) -> dict[str, Artist]:
-		artists:dict[str, Artist] = {}
 
-		if(len(self.id) == 0):
-			return artists
-		
+	def get_data(self) -> dict:
 		API_endpoint = f'https://api.spotify.com/v1/playlists/{self.id}'
 		
 		parameters = {
@@ -36,7 +33,16 @@ class Playlist:
 
 		response = requests.get(url=API_endpoint, headers=self.auth.http_headers(), params=parameters) # type: ignore
 
-		tracks = response.json()['tracks']['items']
+		return response.json()
+
+
+	def get_playlist_artists(self) -> dict[str, Artist]:
+		artists:dict[str, Artist] = {}
+
+		if(len(self.id) == 0):
+			return artists
+		
+		tracks = self.response_data['tracks']['items']
 
 		for track in tracks:
 			for trackArtist in track['track']['artists']:
@@ -46,6 +52,7 @@ class Playlist:
 				artist:Artist = Artist(id, name)
 				artists[id] = artist
 		return artists
+
 
 	def get_playlist_genres(self) -> list:
 		# TODO implement logic for going through list of artists and getting genres
