@@ -44,7 +44,7 @@ class Playlist:
 		return artists
 
 
-	def get_playlist_albums(self, auth) -> dict[str, Album]:
+	def get_playlist_albums(self, auth:Auth) -> dict[str, Album]:
 		albums:dict[str, Album] = {}
 
 		if(self.id == ""):
@@ -59,7 +59,7 @@ class Playlist:
 		return albums
 
 
-	def get_playlist_genres(self, auth) -> list:
+	def get_playlist_genres(self, auth:Auth) -> list:
 		# get each Artist Genre
 		artist_ids = []
 

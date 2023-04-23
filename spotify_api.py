@@ -1,4 +1,5 @@
 import requests
+import math
 
 from auth import Auth
 
@@ -33,6 +34,10 @@ def get_several_artists_genres(auth:Auth, id_list:list[str]) -> list[str]:
 	i:int = 0
 	limit:int = 50
 	split_requests = []
+
+	num_requests = math.ceil(len(id_list) / limit)
+
+	print(num_requests)
 
 	for id in id_list:
 		if i >= limit:
