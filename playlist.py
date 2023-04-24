@@ -13,7 +13,7 @@ class Playlist:
 		self.data:dict = spotify_api.get_playlist(auth, self.id)
 		self.albums:dict[str, Album] = self.get_playlist_albums(auth)
 		self.artists:dict[str, Artist] = self.get_playlist_artists()
-		self.genres:list = self.get_playlist_genres(auth)
+		self.genres:dict[str, int] = self.get_playlist_genres(auth)
 
 	def get_id(self) -> str:
 		if not self.check_url(self.url):
@@ -59,7 +59,7 @@ class Playlist:
 		return albums
 
 
-	def get_playlist_genres(self, auth:Auth) -> list:
+	def get_playlist_genres(self, auth:Auth) -> dict[str, int]:
 		# get each Artist Genre
 		artist_ids = []
 
@@ -68,7 +68,9 @@ class Playlist:
 
 		genres = spotify_api.get_several_artists_genres(auth, artist_ids)
 
-		return genres
+		ranked_genres = {k:v for k,v in sorted(genres.items(), key=lambda item: item[1], reverse=True)}
+
+		return ranked_genres
 
 	@staticmethod
 	def check_url(url:str) -> bool:

@@ -1,15 +1,34 @@
 import requests
 import math
+import pprint
+import logging
 
 from auth import Auth
+
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+
+logging.basicConfig(level=logging.INFO)
+
+retry_strategy = Retry(
+	total=3,
+	status_forcelist=[429, 500, 502, 503, 504],
+	method_whitelist=["GET"],
+	backoff_factor = 16
+)
+adapter = HTTPAdapter(max_retries=retry_strategy)
+http = requests.Session()
+http.mount("https://", adapter)
+http.mount("http://", adapter)
 
 @staticmethod
 def get_related_artists(auth:Auth, artist):
 	API_endpoint = f'https://api.spotify.com/v1/artists/{artist.id}/related-artists'
 
-	response = requests.get(url=API_endpoint, headers=auth.http_headers()) # type: ignore
+	response = http.get(url=API_endpoint, headers=auth.http_headers()) # type: ignore
 
 	return response.json()['artists']
+
 
 
 @staticmethod
@@ -21,48 +40,70 @@ def get_playlist(auth:Auth, id:str):
 		"fields": "tracks.items.track.artists(name, id), tracks.items.track.album(id)"
 	}
 
-	response = requests.get(url=API_endpoint, headers=auth.http_headers(), params=parameters) # type: ignore
+	response = http.get(url=API_endpoint, headers=auth.http_headers(), params=parameters) # type: ignore
 
 	return response.json()
 
+
+
 @staticmethod
-def get_several_artists_genres(auth:Auth, id_list:list[str]) -> list[str]:
-	genres = {}
+def get_several_artists_genres(auth:Auth, id_list:list[str]) -> dict[str, int]:
+	genres:dict[str, int] = {}
 
 	API_endpoint = f'https://api.spotify.com/v1/artists'
 
-	i:int = 0
-	limit:int = 50
+
+	#split artist info requests into groups of 50
+	limit:int = 2
 	split_requests = []
 
 	num_requests = math.ceil(len(id_list) / limit)
 
-	print(num_requests)
+	for x in range(num_requests):
+		split_requests.append([])
 
+	i:int = 0
+	counter:int = 0
+	
 	for id in id_list:
-		if i >= limit:
+		counter += 1
+		if counter > limit:
 			i += 1
-			continue
+			counter = 0
 
 		split_requests[i].append(id)
-			
+
+
 	for request in split_requests:
 		ids:str = ','.join(request)
 		
+		if(ids == ""):
+			continue
+
 		parameters = {
 			"ids": ids
 		}
 
-		print(parameters)
-		# response = requests.get(url=API_endpoint, headers=auth.http_headers())
-	return []
-	# return response.json()['genres']
+		response = http.get(url=API_endpoint, headers=auth.http_headers(), params=parameters)
+		
+		data = response.json()
+		for artists in data.values():
+			for artist in artists:
+				for genre in artist['genres']:
+					if genre in genres:
+						genres[genre] += 1
+					else:
+						genres[genre] = 1
+		
+	return genres
+
+
 
 @staticmethod
 def get_album_genre(auth:Auth, id:str) -> list[str]:
 	
 	API_endpoint = f'https://api.spotify.com/v1/albums/{id}'
 
-	response = requests.get(url=API_endpoint, headers=auth.http_headers())
+	response = http.get(url=API_endpoint, headers=auth.http_headers())
 
 	return response.json()['genres']

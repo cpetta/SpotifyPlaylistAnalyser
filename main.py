@@ -22,18 +22,24 @@ auth = Auth(settings)
 playlist = Playlist(auth, UI.url)
 
 # Print playlist Genres
-print("\nPlaylist Genres\n")
-for genre in playlist.genres:
-	print(genre)
+print(f"\nTop {GENRE_LIMIT} Playlist Genres\n")
+i:int = 0
+for genre in playlist.genres.keys():
+	if i > GENRE_LIMIT:
+		break
+	i += 1
+	print(f"{playlist.genres[genre]} - {genre}")
 
 # for album in playlist.albums.values():
 # 	for genre in album.genres:
 # 		print(genre)
 
-sys.exit()
+# sys.exit()
 
 # Create list of recomended artists
-print("Number of artists in playlist", len(playlist.artists))
+print("\nNumber of artists in playlist", len(playlist.artists), "\n")
+
+print(f"\nTop {ARTIST_REC_LIMIT} Recommended Artists\n")
 
 recomended_artists_list:dict[str, Artist] = {};
 
@@ -53,4 +59,4 @@ for recomended_artist in ranked_recomended_artists:
 	if i >= ARTIST_REC_LIMIT:
 		break
 	i += 1
-	print(f"recomendation {i}: {recomended_artist}")
+	print(f"\n Recomendation {i}: {recomended_artist}")
