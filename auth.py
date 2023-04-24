@@ -1,3 +1,4 @@
+import sys
 import time
 
 from access_token import Token
@@ -33,6 +34,7 @@ class Auth:
 				print("requested new token")
 			else:
 				print("error requesting new token")
+				sys.exit(1)
 
 		return token
 
