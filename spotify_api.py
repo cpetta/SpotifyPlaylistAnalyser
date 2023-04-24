@@ -6,6 +6,7 @@ from auth import Auth
 
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+from tqdm import tqdm
 
 logging.basicConfig(level=logging.INFO)
 
@@ -75,7 +76,7 @@ def get_several_artists_genres(auth:Auth, id_list:list[str]) -> dict[str, int]:
 		split_requests[i].append(id)
 
 
-	for request in split_requests:
+	for request in tqdm(split_requests):
 		ids:str = ','.join(request)
 		
 		if(ids == ""):

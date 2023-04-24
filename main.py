@@ -3,6 +3,8 @@ from playlist import Playlist
 from auth import Auth
 from artist import Artist
 from settings import Settings
+from tqdm import tqdm
+
 
 settings = Settings()
 
@@ -23,7 +25,9 @@ playlist = Playlist(auth, UI.url)
 
 
 # Print playlist Genres
-print(f"\nTop {GENRE_LIMIT} Playlist Genres\n")
+print('------------------------------')
+print(f"Top {GENRE_LIMIT} Playlist Genres")
+print('------------------------------')
 
 i:int = 0
 for genre in playlist.genres.keys():
@@ -34,13 +38,15 @@ for genre in playlist.genres.keys():
 
 
 # Create list of recomended artists
-print("\nNumber of artists in playlist", len(playlist.artists), "\n")
+print("\nNumber of artists in playlist:", len(playlist.artists), "\n")
 
-print(f"\nTop {ARTIST_REC_LIMIT} Recommended Artists\n")
+print('------------------------------')
+print(f"Top {ARTIST_REC_LIMIT} Recommended Artists")
+print('------------------------------')
 
 recomended_artists_list:dict[str, Artist] = {};
 
-for artist in playlist.artists.values():
+for artist in tqdm(playlist.artists.values()):
 	recomended_artists_list = artist.get_related_artists(auth, recomended_artists_list)
 
 	for recomended_artist in recomended_artists_list.values():
