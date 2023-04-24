@@ -1,6 +1,5 @@
 import requests
 import math
-import pprint
 import logging
 
 from auth import Auth
@@ -20,6 +19,8 @@ adapter = HTTPAdapter(max_retries=retry_strategy)
 http = requests.Session()
 http.mount("https://", adapter)
 http.mount("http://", adapter)
+
+
 
 @staticmethod
 def get_related_artists(auth:Auth, artist):

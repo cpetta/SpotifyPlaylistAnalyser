@@ -28,14 +28,14 @@ class CommandLineUI:
 				self.url: str = url
 			else:
 				self.url: str = ""
-				print("Please ensure that the url provided is a share link for the playlist e.x (open.spotify.com/playlist/)")
+				print("Please ensure url is formatted like: (open.spotify.com/playlist/)")
 		except:
 			self.ask_for_url()
 
 
 	def ask_for_url(self):
 		while(self.url == ""):
-			print("Please enter a spotify playlist share URL. Formatted such as: (open.spotify.com/playlist/)")
+			print("Enter a spotify playlist URL. Formatted like: (open.spotify.com/playlist/)")
 			url = input("URL: ")
 
 			check_url = Playlist.check_url(url)
@@ -46,4 +46,4 @@ class CommandLineUI:
 				sys.exit(0)
 			else:
 				self.url: str = ""
-				print(f"url doesn't appear to be the correct format. Please make sure it looks similar to (open.spotify.com/playlist/)")
+				print(f"url doesn't appear to be the correct format. Should resemble:(open.spotify.com/playlist/)")
