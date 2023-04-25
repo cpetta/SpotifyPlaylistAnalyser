@@ -28,12 +28,8 @@ class Token:
 			f = open("token.json", "r")
 			data:str = f.readline()
 			f.close()
-			saved_auth = json.loads(data, object_hook=lambda d: Token(**d))
-			
-			self.access_token:str = saved_auth.access_token
-			self.token_type:str = saved_auth.token_type
-			self.expires_in:int = saved_auth.expires_in
-			self.expire_time:float = saved_auth.expire_time
+			self = json.loads(data, object_hook=lambda d: Token(**d))
+
 			return True
 		except:
 			return False
@@ -55,7 +51,9 @@ class Token:
 				'client_id': id,
 				'client_secret': secret,
 			}
+			
 			response = requests.post('https://accounts.spotify.com/api/token', data=data)
+			
 			if(response.ok):
 				new_token:Token = json.loads(response.content, object_hook=lambda d: Token(**d))
 				current_time:float = time.mktime(time.localtime())

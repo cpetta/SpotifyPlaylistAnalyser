@@ -40,46 +40,27 @@ class Artist:
 	def __str__(self) -> str:
 		return f"\nName: {self.name}\nCount: {self.count}\n"
 
-
 	# Compairison opperators
 	# Equal
 	def __eq__(self, other: 'Artist') -> bool:
-		if self.count == other.count:
-			return True
-		else:
-			return False
+		return self.count == other.count
 	
 	# Greater Than	
 	def __gt__(self, other: 'Artist') -> bool:
-		if self.count < other.count:
-			return True
-		else:
-			return False
+		return self.count < other.count
 	
 	# Greater or equal
 	def __ge__(self, other: 'Artist') -> bool:
-		if self.count <= other.count:
-			return True
-		else:
-			return False
-	
+		return self.count <= other.count
+
 	# Less then
 	def __lt__(self, other: 'Artist') -> bool:
-		if self.count > other.count:
-			return True
-		else:
-			return False
+		return self.count > other.count
 	
 	# Less than or equal
 	def __le__(self, other: 'Artist') -> bool:
-		if self.count >= other.count:
-			return True
-		else:
-			return False
+		return self.count >= other.count
 	
 	# Not equal
 	def __ne__(self, other: 'Artist') -> bool:
-		if self.count != other.count:
-			return True
-		else:
-			return False
+		return self.count != other.count

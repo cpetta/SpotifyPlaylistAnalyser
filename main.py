@@ -58,8 +58,6 @@ ranked_recomended_artists = sorted(recomended_artists_list.values())
 
 # Print results
 i:int = 0
-for recomended_artist in ranked_recomended_artists:
-	if i >= ARTIST_REC_LIMIT:
-		break
+for recomended_artist in ranked_recomended_artists[:ARTIST_REC_LIMIT]:
 	i += 1
 	print(f"\nRecomendation {i}: {recomended_artist}")

@@ -22,7 +22,7 @@ http.mount("https://", adapter)
 http.mount("http://", adapter)
 
 
-
+# https://developer.spotify.com/documentation/web-api/reference/get-an-artists-related-artists
 @staticmethod
 def get_related_artists(auth:Auth, artist):
 	API_endpoint = f'https://api.spotify.com/v1/artists/{artist.id}/related-artists'
@@ -32,7 +32,7 @@ def get_related_artists(auth:Auth, artist):
 	return response.json()['artists']
 
 
-
+# https://developer.spotify.com/documentation/web-api/reference/get-playlist
 @staticmethod
 def get_playlist(auth:Auth, id:str):
 	API_endpoint = f'https://api.spotify.com/v1/playlists/{id}'
@@ -48,6 +48,7 @@ def get_playlist(auth:Auth, id:str):
 
 
 
+# https://developer.spotify.com/documentation/web-api/reference/get-several-tracks
 @staticmethod
 def get_several_artists_genres(auth:Auth, id_list:list[str]) -> dict[str, int]:
 	genres:dict[str, int] = {}
@@ -55,8 +56,8 @@ def get_several_artists_genres(auth:Auth, id_list:list[str]) -> dict[str, int]:
 	API_endpoint = f'https://api.spotify.com/v1/artists'
 
 
-	#split artist info requests into groups of 50
-	limit:int = 2
+	# Split artist info requests into groups of 50
+	limit:int = 50
 	split_requests = []
 
 	num_requests = math.ceil(len(id_list) / limit)
@@ -66,7 +67,8 @@ def get_several_artists_genres(auth:Auth, id_list:list[str]) -> dict[str, int]:
 
 	i:int = 0
 	counter:int = 0
-	
+
+	# Put each ID into an array, until that array reaches the limit.
 	for id in id_list:
 		counter += 1
 		if counter > limit:
@@ -74,7 +76,6 @@ def get_several_artists_genres(auth:Auth, id_list:list[str]) -> dict[str, int]:
 			counter = 0
 
 		split_requests[i].append(id)
-
 
 	for request in tqdm(split_requests):
 		ids:str = ','.join(request)
@@ -88,6 +89,7 @@ def get_several_artists_genres(auth:Auth, id_list:list[str]) -> dict[str, int]:
 
 		response = http.get(url=API_endpoint, headers=auth.http_headers(), params=parameters)
 		
+		# Traverse the returned data structure to get a frequency list of genres 
 		data = response.json()
 		for artists in data.values():
 			for artist in artists:
@@ -100,7 +102,7 @@ def get_several_artists_genres(auth:Auth, id_list:list[str]) -> dict[str, int]:
 	return genres
 
 
-
+# https://developer.spotify.com/documentation/web-api/reference/get-an-album
 @staticmethod
 def get_album_genre(auth:Auth, id:str) -> list[str]:
 	
