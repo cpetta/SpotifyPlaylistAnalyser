@@ -18,4 +18,3 @@ Usage
 5. run ``python spotifyPlaylistAnalyser.py``
 6. Paste the copied URI into the command window
 7. Press Enter
-8. Resutls
